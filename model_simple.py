@@ -18,14 +18,14 @@ class model():
             logit = tf.matmul(h, self.W) + self.b
             pred = tf.argmax(logit, 1)
         logit = tf.matmul(tf.nn.dropout(h, 0.5), self.W) + self.b
-        onehot_label = tf.one_hot(label, depth=self.class_num, dtype=tf.float32)
-        cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logit, onehot_label)
-        loss = tf.reduce_sum(cross_entropy) + tf.nn.l2_loss(self.W)
+        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logit, label)
+        self.loss = tf.reduce_sum(cross_entropy) + tf.nn.l2_loss(self.W)
 
         with tf.variable_scope("metrics"):
-            accuracy = tf.contrib.metrics.accuracy(pred, label)
-            precision = tf.contrib.metrics.streaming_precision(pred, label)
-            recall = tf.contrib.metrics.streaming_recall(pred, label)
+            self.accuracy = tf.contrib.metrics.accuracy(pred, label)
+            self.precision = tf.contrib.metrics.streaming_precision(pred, label)
+            self.recall = tf.contrib.metrics.streaming_recall(pred, label)
 
-        return loss, [x, label, size_list], [emb, h, logit, pred, cross_entropy, accuracy, precision, recall]
+        self.x, self.label, self.size_list = x, label, size_list
+        self.emb, self.h, self.logit, self.cross_entropy, self.pred = emb, h, logit, cross_entropy, pred
 

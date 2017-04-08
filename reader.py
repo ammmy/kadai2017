@@ -12,9 +12,10 @@ def read_instance(ls):
     for f in tmp[1:]: feature_list.extend(dup(f.split(':')))
     return (int(label), np.array(feature_list, dtype=np.int32))
 
-def read_data(ls, feature_size=-1):
+def read_data(ls, feature_size=-1, rm_dup=True):
     vocab_size = 0
-    sls = set(ls)
+    sls = ls
+    if rm_dup:sls = set(ls)
     label, feature_list = [], []
     for _ls in sls:
         _label, _feature_list = read_instance(_ls)
@@ -32,9 +33,9 @@ def read_data(ls, feature_size=-1):
     input_label = (np.array(label, dtype=np.int32) + 1) / 2
     return (input_label, feature_list_pad, size_list), vocab_size + 1, feature_size
 
-def read_dataset(f_name=["train.txt", "devel.txt", "test.txt"]):
+def read_dataset(f_name=["../preprocess/train.txt", "../preprocess/devel.txt", "../preprocess/test.txt"]):
     f_name = {k:fn for k, fn in zip(["train", "dev", "test"], f_name)}
-    train_data, vocab_size, feature_size = read_data(read_file(f_name["train"]))
+    train_data, vocab_size, feature_size = read_data(read_file(f_name["train"]), rm_dup=False)
     dev_data, _, _ = read_data(read_file(f_name["dev"]), feature_size=feature_size)
     test_data, _, _ = read_data(read_file(f_name["test"]), feature_size=feature_size)
     return train_data, dev_data, test_data, vocab_size, feature_size
