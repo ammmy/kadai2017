@@ -21,7 +21,7 @@ class model():
         cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logit, label)
         self.loss = tf.reduce_sum(cross_entropy) + tf.nn.l2_loss(self.W)
 
-        with tf.variable_scope("metrics"):
+        with tf.variable_scope("metrics"): # something is strange here
             self.accuracy = tf.contrib.metrics.accuracy(pred, label)
             self.precision = tf.contrib.metrics.streaming_precision(pred, label)
             self.recall = tf.contrib.metrics.streaming_recall(pred, label)
