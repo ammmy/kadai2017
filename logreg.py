@@ -31,7 +31,7 @@ def train(model, dim_embed, class_num, learning_rate):
         dev_loss, dev_accuracy = sess.run([m.loss, m.accuracy], feed_dict=fd_dev.get())
         print "@epoch %s, train_loss : %s, dev_loss : %s, train_accuracy : %s, dev_accuracy : %s" % (epoch, train_loss, dev_loss, round(train_accuracy, 4), round(dev_accuracy, 4))
 
-# TODO:implementation of early stoppin
+# TODO:implementation of early stopping
 """
 dev_loss_hist, best_dev_loss = [], 1000
 patience, stop_patience = 0, 10
